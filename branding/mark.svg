@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="512" height="512" role="img" aria-label="Pocket Model Studio mark">
   <!-- 芯片/卡片：斜插在口袋里，下半截被袋身挡住 -->
-  <rect x="-7" y="-13" width="14" height="26" rx="4.5" fill="#FFB300" transform="translate(54 38) rotate(-12)"/>
+  <rect x="-11" y="-12" width="22" height="24" rx="3" fill="#FFB300" transform="translate(54 38) rotate(-10)"/>
   <!-- 口袋：宽底、两侧微收，袋口是一道横线 -->
   <path d="M34,44 H74 L73,74 Q72.5,82 64,82 H44 Q35.5,82 35,74 Z" fill="#EFF6F3"/>
 </svg>
