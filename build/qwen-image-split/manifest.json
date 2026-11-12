@@ -90,6 +90,9 @@
       "auto,vae=on",
       "--flash-attn",
       "off,diffusion=on",
+      "--vae-tiling",
+      "--vae-tile-size",
+      "320",
       "--listen-ip",
       "127.0.0.1"
     ],
