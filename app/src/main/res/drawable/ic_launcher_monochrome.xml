@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Android 13+ 主题图标：系统整体着色，只留形状（纯白）。
-     ★ 单色版**不掏整个屏幕洞**：那样屏幕的白边会和袋身连成一个闭环，读成「手提包提手」。
-       改成在手机上开一条细缝（evenOdd），既是屏幕亮线的残影，也把手机和袋身分开。
-        试过并否决的：掏空屏幕 + 白条 → 提手；纯实心不倾斜 → 一团凸块。 -->
+<!-- Android 13+ 主题图标：只留剪影（纯白）。
+     手机上开一条细缝（evenOdd）代替屏幕：掏空整个屏幕会让白边围成闭环，
+     整张图读成「手提包 + 提手」。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -11,15 +10,15 @@
 
     <group
         android:pivotX="54"
-        android:pivotY="43"
+        android:pivotY="44"
         android:rotation="5">
         <path
             android:fillColor="#FFFFFFFF"
             android:fillType="evenOdd"
-            android:pathData="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" />
+            android:pathData="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" />
     </group>
 
     <path
         android:fillColor="#FFFFFFFF"
-        android:pathData="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" />
+        android:pathData="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" />
 </vector>

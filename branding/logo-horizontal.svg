@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 104" width="920" height="208" role="img" aria-label="Pocket Model Studio">
   <g transform="translate(2 4) scale(0.86)">
-    <g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#00695C"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#EFF6F3"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g>
-    <path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#00695C"/>
+    <g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#00695C"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#EFF6F3"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g>
+    <path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#00695C"/>
   </g>
   <text x="106" y="50" font-family="Segoe UI Semibold, Segoe UI, Inter, Helvetica Neue, Arial, sans-serif"
         font-size="30" font-weight="600" letter-spacing="-0.6" fill="#0E3B36">Pocket Model Studio</text>

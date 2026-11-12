@@ -16,11 +16,11 @@
   h2{font-size:12px;font-weight:600;letter-spacing:.1em;color:#8b949e;margin:46px 0 16px;text-transform:uppercase}
   .card{border:1px solid #21262d;background:#161b22;border-radius:16px;padding:24px}
   .hero{display:flex;gap:36px;align-items:center;flex-wrap:wrap}
-  .hero .big{width:240px;height:240px;border-radius:56px;display:grid;place-items:center;flex:0 0 auto;
+  .hero .big{width:250px;height:250px;border-radius:58px;display:grid;place-items:center;flex:0 0 auto;
              background:linear-gradient(160deg,var(--teal-hi),var(--teal-lo))}
   .hero p{font-size:13.5px;line-height:1.85;color:#a5b1bd;margin:0;max-width:520px}
   .hero b{color:#e6edf3}
-  .sizes{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap}
+  .sizes{display:flex;align-items:flex-end;gap:24px;flex-wrap:wrap}
   .sizes figure{margin:0;text-align:center}
   .sizes figcaption{font-size:10.5px;color:#6e7681;margin-top:9px;letter-spacing:.06em}
   .tile{display:grid;place-items:center;background:linear-gradient(160deg,var(--teal-hi),var(--teal-lo))}
@@ -39,43 +39,46 @@
 <body>
 <div class="wrap">
   <h1>Pocket Model Studio · logo</h1>
-  <p class="sub">口袋 + 竖插在里面的手机。两个形状，一条琥珀线，倾斜 5°。</p>
+  <p class="sub">口袋 + 竖插在里面的手机。左右竖直、平底，手机倾斜 5°，一条琥珀线。</p>
 
   <div class="card hero">
     <div class="big">
-      <svg width="196" height="196" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></svg>
+      <svg width="230" height="230" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
     </div>
     <p>
       口袋是「随身」最省笔墨的符号 —— 两笔就能画完，不需要包、手、装饰。<br>
-      手机<b>竖着插进袋口</b>，下半截被袋身吃掉，只露出上面一截。<br>
-      琥珀色那道是屏幕上的一条亮线：它是整张图<b>唯一的高饱和色</b>，
-      也是「这台设备正在算东西」的提示。<br>
-      整体<b>倾斜 5°</b>：完全正放会像一件摆好的产品图，
-      稍微歪一点才像有人随手把它塞进口袋。
+      袋身<b>左右竖直、底边平直</b>，只把两个底角磨圆，才不像杯子。<br>
+      手机<b>竖着插进袋口、倾斜 5°</b>：正放像产品摆拍，歪一点才像随手塞的。<br>
+      琥珀色那道是屏幕上的一条亮线，整张图<b>唯一的高饱和色</b>。<br>
+      袋口那条横切边，就是「在里面」的全部证据。
     </p>
   </div>
 
   <h2>尺寸阶梯</h2>
   <div class="card">
     <div class="sizes">
+      <figure><div class="tile" style="width:120px;height:120px;border-radius:28px">
+        <svg width="110" height="110" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
+      </div><figcaption>120</figcaption></figure>
+
       <figure><div class="tile" style="width:96px;height:96px;border-radius:22px">
-        <svg width="86" height="86" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></svg>
+        <svg width="88" height="88" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
       </div><figcaption>96</figcaption></figure>
 
       <figure><div class="tile" style="width:64px;height:64px;border-radius:15px">
-        <svg width="57" height="57" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></svg>
+        <svg width="58" height="58" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
       </div><figcaption>64</figcaption></figure>
 
       <figure><div class="tile" style="width:48px;height:48px;border-radius:11px">
-        <svg width="43" height="43" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></svg>
+        <svg width="44" height="44" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
       </div><figcaption>48 启动器</figcaption></figure>
 
-      <figure><div class="tile" style="width:32px;height:32px;border-radius:8px">
-        <svg width="28" height="28" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></svg>
+      <figure><div class="tile" style="width:32px;height:32px;border-radius:7px">
+        <svg width="29" height="29" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
       </div><figcaption>32</figcaption></figure>
 
       <figure><div class="tile" style="width:24px;height:24px;border-radius:6px">
-        <svg width="21" height="21" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></svg>
+        <svg width="22" height="22" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></svg>
       </div><figcaption>24</figcaption></figure>
 
     </div>
@@ -87,23 +90,23 @@
       <div><svg width="104" height="104" viewBox="0 0 108 108">
         <defs><clipPath id="c"><circle cx="54" cy="54" r="54"/></clipPath></defs>
         <g clip-path="url(#c)"><rect width="108" height="108" fill="#00695C"/>
-          <g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g>
-          <path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></g>
+          <g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g>
+          <path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></g>
       </svg><div class="lab">圆形蒙版</div></div>
 
       <div><svg width="104" height="104" viewBox="0 0 108 108">
         <defs><clipPath id="s"><rect width="108" height="108" rx="27"/></clipPath></defs>
         <g clip-path="url(#s)"><rect width="108" height="108" fill="#00695C"/>
-          <g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#EFF6F3"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#14211F"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g>
-          <path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#EFF6F3"/></g>
+          <g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#EFF6F3"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#14211F"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g>
+          <path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#EFF6F3"/></g>
       </svg><div class="lab">方圆蒙版</div></div>
 
       <div><div style="width:104px;height:104px;border-radius:26px;background:#111;display:grid;place-items:center">
-        <svg width="92" height="92" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#fff" fill-rule="evenodd"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#fff"/></svg>
-      </div><div class="lab">单色（系统着色）</div></div>
+        <svg width="100" height="100" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#fff" fill-rule="evenodd"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#fff"/></svg>
+      </div><div class="lab">单色（主题图标）</div></div>
 
       <div><div style="width:104px;height:104px;border-radius:26px;background:#F4F7F6;display:grid;place-items:center">
-        <svg width="92" height="92" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 43)"><path d="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" fill="#00695C"/><path d="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" fill="#EFF6F3"/><path d="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" fill="#FFB300"/></g><path d="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" fill="#00695C"/></svg>
+        <svg width="100" height="100" viewBox="0 0 108 108" aria-label="logo"><g transform="rotate(5 54 44)"><path d="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" fill="#00695C"/><path d="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" fill="#00443D"/><path d="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" fill="#FFB300"/></g><path d="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" fill="#00695C"/></svg>
       </div><div class="lab">亮底</div></div>
     </div>
   </div>
@@ -117,14 +120,13 @@
   <div class="card">
     <ul>
       <li><b>两个形状</b>：袋身 + 手机。没有第三个元素，没有渐变、描边、阴影 —— 缩到 24px 还是同一张图。</li>
-      <li><b>倾斜 5°</b>：正放会显得像产品摆拍，微微歪一点才有「随手塞进去」的动势，也不至于看起来要倒。</li>
-      <li><b>袋口是一条直线</b>，手机被它横切。这条切边就是「在里面」的全部证据，不需要画袋口深度。</li>
+      <li><b>袋身左右竖直</b>：不做梯形收口（那会把注意力往下引，像盾牌）；只把底角磨圆，才不至于像水杯。</li>
+      <li><b>倾斜 5° 只在手机上</b>：口袋保持稳定，手机微歪 —— 一动一静，画面才不僵。</li>
+      <li><b>袋口是一条直线</b>，手机被它横切。这条切边就是「在里面」的全部证据。</li>
+      <li><b>尺幅放大</b>：整体占 108 画布的 56×64（原 48×61），圆形蒙版下几乎填满安全区。</li>
       <li><b>只留一条琥珀线</b>：不画听筒、摄像头、按键。一条横线足够读出「屏幕」，也保证 24px 不糊。</li>
-      <li><b>手机 27×40</b>（比例 1:1.5）：再窄会退化成条状，再宽会变成方块；这个比例最接近真实手机的观感。</li>
-      <li><b>袋身 48 宽、浅袋平底、两侧微收</b>：不做标准梯形（像盾牌），不做全圆弧（像纸杯）；底边留一段平直才像布。</li>
-      <li><b>品牌色沿用</b>：青 <code>#00695C</code> + 琥珀 <code>#FFB300</code>，袋身用米白 <code>#EFF6F3</code> 提亮对比。</li>
-      <li><b>安全区</b>：倾斜后最外沿距中心约 33，仍在自适应图标安全区内，圆形/方圆蒙版都不切。</li>
-      <li><b>单色版只开一条缝</b>：掏空整个屏幕会让白边围成闭环、读成「手提包提手」，改成在手机上开一条细缝。</li>
+      <li><b>单色版只开一条缝</b>：掏空整个屏幕会让白边围成闭环、读成「手提包提手」。</li>
+      <li><b>品牌色沿用</b>：青 <code>#00695C</code> + 琥珀 <code>#FFB300</code>，袋身用米白 <code>#EFF6F3</code>。</li>
     </ul>
     <div class="sw">
       <div style="background:#00806D">00806D</div>
@@ -137,7 +139,7 @@
 
   <h2>文件</h2>
   <div class="card files">
-    <code>branding/app-icon.svg</code> — 圆角底板版（512，用于商店/分享）<br>
+    <code>branding/app-icon.svg</code> — 圆角底板版（已收紧 viewBox，图案占比更大）<br>
     <code>branding/mark.svg</code> — 深底透明版<br>
     <code>branding/mark-on-light.svg</code> — 亮底透明版<br>
     <code>branding/logo-horizontal.svg</code> — 横版组合<br>

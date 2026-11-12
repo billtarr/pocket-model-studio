@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 手机 + 口袋。手机竖着插在袋口里、倾斜 5°（正放像摆拍，歪一点才像随手塞的），
-     下半截被袋身挡住，只露出上面一截。
-     琥珀条是屏幕上的一道亮线，整张图唯一的高饱和色，24dp 仍可见。 -->
+<!-- 手机 + 口袋。口袋左右完全竖直、平底；手机竖着插在袋口里、倾斜 5°。
+     下半截被袋身挡住，只露出上面一截；琥珀条是屏幕上唯一的亮色。
+     图案外沿距图标中心 ≤35（圆形蒙版半径 36），已按最坏情况留过余量。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
@@ -10,20 +10,20 @@
 
     <group
         android:pivotX="54"
-        android:pivotY="43"
+        android:pivotY="44"
         android:rotation="5">
         <path
             android:fillColor="#FFEFF6F3"
-            android:pathData="M47,23 H61 A6.5,6.5 0 0 1 67.5,29.5 V56.5 A6.5,6.5 0 0 1 61,63 H47 A6.5,6.5 0 0 1 40.5,56.5 V29.5 A6.5,6.5 0 0 1 47,23 Z" />
+            android:pathData="M46.5,22.5 H61.5 A7,7 0 0 1 68.5,29.5 V56.5 A7,7 0 0 1 61.5,63.5 H46.5 A7,7 0 0 1 39.5,56.5 V29.5 A7,7 0 0 1 46.5,22.5 Z" />
         <path
             android:fillColor="#FF14211F"
-            android:pathData="M47.7,25.6 H60.3 A4.6,4.6 0 0 1 64.9,30.2 V55.8 A4.6,4.6 0 0 1 60.3,60.4 H47.7 A4.6,4.6 0 0 1 43.1,55.8 V30.2 A4.6,4.6 0 0 1 47.7,25.6 Z" />
+            android:pathData="M47.3,25.3 H60.7 A5,5 0 0 1 65.7,30.3 V55.7 A5,5 0 0 1 60.7,60.7 H47.3 A5,5 0 0 1 42.3,55.7 V30.3 A5,5 0 0 1 47.3,25.3 Z" />
         <path
             android:fillColor="#FFFFB300"
-            android:pathData="M45.4,30.4 H62.6 A2.3,2.3 0 0 1 64.9,32.7 V32.7 A2.3,2.3 0 0 1 62.6,35 H45.4 A2.3,2.3 0 0 1 43.1,32.7 V32.7 A2.3,2.3 0 0 1 45.4,30.4 Z" />
+            android:pathData="M44.7,31.2 H63.3 A2.4,2.4 0 0 1 65.7,33.6 V33.6 A2.4,2.4 0 0 1 63.3,36 H44.7 A2.4,2.4 0 0 1 42.3,33.6 V33.6 A2.4,2.4 0 0 1 44.7,31.2 Z" />
     </group>
 
     <path
         android:fillColor="#FFEFF6F3"
-        android:pathData="M30,46 H78 L76.8,71 Q76.8,83 66,83 H42 Q31.2,83 31.2,71 Z" />
+        android:pathData="M26,46 H82 V74 A11,11 0 0 1 71,85 H37 A11,11 0 0 1 26,74 Z" />
 </vector>
