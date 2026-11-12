@@ -1,16 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 口袋 + 斜插的芯片。口袋是「随身」最省笔墨的符号，芯片是模型本身：
+     卡片下半截被袋身挡住，只露出上面一截 —— 装得下，也随时能取出来用。
+     几何与 branding/mark.svg 完全一致（卡片绕 (54,38) 逆时针 12°）。
+     最外沿距图标中心 ~30，落在自适应图标 66dp 安全区（圆心 54,54、半径 33）内。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- 一个简化的「箱体 + 电路」：代表模型容器与端侧推理 -->
+
+    <group
+        android:pivotX="54"
+        android:pivotY="38"
+        android:rotation="-12">
+        <path
+            android:fillColor="#FFFFB300"
+            android:pathData="M51.5,25 h5 a4.5,4.5 0 0 1 4.5,4.5 v17 a4.5,4.5 0 0 1 -4.5,4.5 h-5 a4.5,4.5 0 0 1 -4.5,-4.5 v-17 a4.5,4.5 0 0 1 4.5,-4.5 z" />
+    </group>
+
+    <!-- 口袋：宽底、两侧微收，袋口是一道横线 -->
     <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M54,26L78,38v24c0,12 -10,20 -24,22c-14,-2 -24,-10 -24,-22V38L54,26zM54,33L37,41v21c0,9 7,15 17,17c10,-2 17,-8 17,-17V41L54,33z" />
-    <path
-        android:fillColor="#FFFFFFFF"
-        android:pathData="M45,52h18v4h-18zM45,60h18v4h-18zM51,66h6v8h-6z" />
-    <path
-        android:fillColor="#FF4DB6AC"
-        android:pathData="M54,44m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+        android:fillColor="#FFEFF6F3"
+        android:pathData="M34,44 H74 L73,74 Q72.5,82 64,82 H44 Q35.5,82 35,74 Z" />
 </vector>
