@@ -183,7 +183,8 @@
     <textarea id="imgPrompt" placeholder="描述你想要的画面，例如：a lovely cat, soft light, 35mm"></textarea>
     <div class="row" style="margin-top:10px">
       <span class="label">尺寸</span>
-      <!-- 预设 + 自由输入：和 App 卡片上的分辨率语义一致。以前是固定 select（含 640/768），
+      <!-- 预设 + 自由输入。尺寸只在这里定：App 卡片上已经没有分辨率设置了，
+           每次请求带自己的尺寸，换尺寸不需要重启服务。以前是固定 select（含 640/768），
            768² 在 v73 上必 OOM，640² 也只是白白失败一次。 -->
       <input id="imgSize" type="number" list="sizeList" value="320" min="64" max="1024" step="16"
              style="width:88px" autocomplete="off">
@@ -214,7 +215,7 @@
   <img id="out" alt="生成结果">
   <div class="hint">
     <b>步数固定 8</b>（Turbo 是 8 步蒸馏模型，步数与 sigmas、权重配套训练，改了只会出糊图）。<br>
-    320² 约 1 分钟，512² 约 4 分钟。DiT 与 VAE 解码都在 NPU（Hexagon HTP）上跑，
+    320² 约 40 秒，512² 约 1 分钟。DiT 与 VAE 解码都在 NPU（Hexagon HTP）上跑，
     <b>只有文本编码在 CPU</b>。生成期间请保持本页在前台。<br>
     尺寸可填 64~1024（必须是 16 的倍数）。种子填 <b>-1</b> 每次随机、点「随机」抽一个，
     填定值则复现同一张图；随机时实际用的种子会回填到输入框。<br>

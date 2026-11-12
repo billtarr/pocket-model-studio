@@ -5,7 +5,7 @@
   "kind": "image",
   "runtime": "",
   "version": "1.0.0",
-  "description": "Qwen-Image 2.1 Turbo：7.1B DiT 按层切成 3 段常驻链（0-11 / 11-22 / 22-32），末段就是 sd-server 本身，对外提供 /sdapi 接口。256²/8 步约 55 s，同 prompt 复用约 41 s（v73 / 8 Gen 2）。",
+  "description": "Qwen-Image 2.1 Turbo：7.1B DiT 按层切成 3 段常驻链（0-11 / 11-22 / 22-32），末段就是 sd-server 本身，对外提供 /sdapi 接口。320²/8 步约 40 s，512²/8 步约 1 分钟（v73 / 8 Gen 2）。分辨率在 WebUI 里按次指定，改尺寸不用重启服务。",
   "weights": [
     {
       "path": "weights/dit.gguf",
@@ -24,17 +24,6 @@
     }
   ],
   "params": [
-    {
-      "key": "size",
-      "label": "分辨率",
-      "type": "enum",
-      "default": "320",
-      "options": [
-        "320",
-        "512"
-      ],
-      "help": "预设 320²/512²，也可自定义正方形边长（64~1024）。改完需重启服务生效。"
-    },
     {
       "key": "cfg",
       "label": "CFG",
@@ -79,9 +68,9 @@
       "--seed",
       "{seed}",
       "-W",
-      "{size}",
+      "512",
       "-H",
-      "{size}",
+      "512",
       "-t",
       "{threads}",
       "--backend",

@@ -248,8 +248,11 @@ private fun ServiceCard(
                 }
                 IconButton(onClick = onLog) { Icon(Icons.Default.Article, "日志") }
             }
-            // ---- 快捷设置：enum 参数（分辨率这类）直接摆在卡片上，点一下即改 ----
-            // 不再为了选一个分辨率去弹参数对话框：对话框要新建视图树，点进输入框还会拉起输入法
+            // ---- 快捷设置：enum 参数直接摆在卡片上，点一下即改 ----
+            // Qwen-Image 包 12 日起不再声明 `size`，所以这一行现在是空的：分辨率只在 WebUI
+            // 里按次指定，换尺寸不用重启服务（进程启动参数里的 -W/-H 只是没人带尺寸时的兜底）。
+            // 保留这套机制是给「启动期就必须定死」的参数用 —— 比如某些包要选 patch 网格。
+            // 不再为了选一个参数去弹参数对话框：对话框要新建视图树，点进输入框还会拉起输入法
             // （约 90 MB）。11-12 的卡死就发生在「正在读 4.8 GB 权重、可用内存只剩几百 MB」时
             // 点开分辨率的那一刻 —— 系统随即开始 o-kill，整条服务链被清掉。
             val enums = inst.manifest.params.filter { it.type == "enum" && it.options.isNotEmpty() }
@@ -405,7 +408,10 @@ private fun LogDialog(title: String, lines: List<String>, onDismiss: () -> Unit)
  * 这里用户明确知道要打字，不会踩到内存临界时那次额外分配。
  *
  * 约束取 16 的倍数：VAE 下采样 8×、DiT patch 2×，边长不是 16 的倍数会让 latent 切不整，
- * 后端直接报错。上限 1024 是实用上限（512² 已经要吃掉近百秒 VAE 解码）。
+ * 后端直接报错。上限 1024 是实用上限（512² 现在约 1 分钟出图，1024² 的激活和耗时都不划算）。
+ *
+ * ★ 12 日之后 Qwen-Image 包已经不再声明 `size` 参数 —— 分辨率只在 WebUI 里按次指定，
+ *   换尺寸不需要重启服务。这个对话框因此只在别的包声明了 enum 参数时才会被用到。
  */
 @Composable
 private fun SizeInputDialog(
