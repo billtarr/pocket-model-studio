@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pocket Model Studio</title>
+<style>
+  :root {
+    --bg: #f6f5f2;
+    --panel: #ffffff;
+    --line: #e3e1dc;
+    --text: #1c1b1a;
+    --muted: #6f6b66;
+    --accent: #2f6b4f;
+    --accent-soft: #e4efe8;
+    --bubble: #efede8;
+    --err: #a8342a;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141413; --panel: #1d1c1a; --line: #302e2b; --text: #ecebe7;
+      --muted: #a09b94; --accent: #8fd0ac; --accent-soft: #23342a;
+      --bubble: #262421; --err: #f0938a;
+    }
+  }
+  * { box-sizing: border-box; }
+  /* position:fixed 而不是 height:100%：WebView 下百分比高度会被算成内容高度 */
+  html, body { height: 100%; margin: 0; }
+  body {
+    position: fixed; top: 0; left: 0; right: 0;
+    /* 键盘弹出时由 JS 写 --app-h（visualViewport 高度）；没有该 API 时退回 100% */
+    height: var(--app-h, 100%);
+    overflow: hidden;
+    background: var(--bg); color: var(--text);
+    font: 15px/1.6 -apple-system, "SF Pro Text", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
+    display: flex; flex-direction: column;
+    padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+  }
+  header {
+    flex: none; padding: 12px 16px; border-bottom: 1px solid var(--line);
+    display: flex; align-items: center; gap: 10px; background: var(--panel);
+  }
+  header .title { font-weight: 600; font-size: 15px; }
+  header .model { font-size: 12px; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); flex: none; }
+  .dot.ok { background: #35a163; box-shadow: 0 0 0 3px rgba(53,161,99,.16); }
+  .dot.off { background: var(--err); }
+  .spacer { flex: 1; }
+  .ghost {
+    background: transparent; border: 1px solid var(--line); color: var(--muted);
+    border-radius: 8px; padding: 5px 10px; font-size: 12px; cursor: pointer;
+  }
+  .ghost:active { background: var(--bubble); }
+  .ghost.on { color: var(--accent); border-color: var(--accent); }
+  #banner {
+    display: none; margin: 10px 12px 0; padding: 10px 12px; border-radius: 10px;
+    background: var(--accent-soft); color: var(--text); font-size: 13px;
+  }
+  #banner.show { display: block; }
+
+  /* ---- 对话 ---- */
+  #chat {
+    flex: 1 1 auto; min-height: 0; overflow-y: auto;
+    padding: 16px 12px 8px;
+    display: flex; flex-direction: column; gap: 12px;
+    overscroll-behavior: contain;
+  }
+  .msg { max-width: 88%; padding: 10px 13px; border-radius: 14px; white-space: pre-wrap; word-break: break-word; }
+  .msg.user { align-self: flex-end; background: var(--accent-soft); border-bottom-right-radius: 4px; }
+  .msg.bot { align-self: flex-start; background: var(--panel); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+  .msg.err { align-self: flex-start; background: var(--panel); border: 1px solid var(--err); color: var(--err); }
+  .msg.cursor::after { content: "▍"; color: var(--accent); animation: blink 1s steps(2) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .meta { font-size: 11px; color: var(--muted); margin-top: 6px; font-variant-numeric: tabular-nums; }
+  .warn { font-size: 11px; color: var(--err); margin-top: 4px; }
+  .typing { display: inline-flex; gap: 4px; align-items: center; color: var(--muted); font-size: 13px; }
+  .typing i { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); animation: b 1s infinite; }
+  .typing i:nth-child(2) { animation-delay: .15s; }
+  .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes b { 0%,60%,100% { opacity: .25; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+
+  /* ---- 参数面板 ---- */
+  #params {
+    flex: none; display: none; gap: 10px 14px; flex-wrap: wrap; align-items: center;
+    padding: 10px 12px; background: var(--panel); border-top: 1px solid var(--line);
+    font-size: 12px; color: var(--muted);
+  }
+  #params.show { display: flex; }
+  #params label { display: inline-flex; align-items: center; gap: 5px; }
+  #params input[type=number] {
+    width: 66px; background: var(--bg); color: var(--text); border: 1px solid var(--line);
+    border-radius: 7px; padding: 4px 6px; font: inherit; font-size: 12px;
+  }
+  #params input[type=checkbox] { accent-color: var(--accent); }
+
+  footer {
+    flex: none; border-top: 1px solid var(--line); background: var(--panel);
+    padding: 10px 12px; display: flex; gap: 8px; align-items: flex-end;
+  }
+  textarea {
+    flex: 1; resize: none; border: 1px solid var(--line); background: var(--bg); color: var(--text);
+    border-radius: 12px; padding: 10px 12px; font: inherit; max-height: 132px; min-height: 42px;
+    outline: none;
+  }
+  textarea:focus { border-color: var(--accent); }
+  button.send {
+    background: var(--accent); color: #fff; border: 0; border-radius: 12px;
+    padding: 0 16px; height: 42px; font: inherit; font-weight: 600; cursor: pointer; flex: none;
+  }
+  @media (prefers-color-scheme: dark) { button.send { color: #10231a; } }
+  button.send[disabled] { opacity: .45; cursor: default; }
+  button.stop { background: var(--err); }
+  .empty { margin: auto; text-align: center; color: var(--muted); font-size: 13px; line-height: 1.9; padding: 24px; }
+  .empty b { color: var(--text); font-size: 15px; display: block; margin-bottom: 6px; }
+
+  /* ---- 生图 ---- */
+  #img { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 14px 12px; display: none; flex-direction: column; gap: 12px; }
+  body.mode-image #img { display: flex; }
+  body.mode-image #chat, body.mode-image footer, body.mode-image #params { display: none; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
+  .row { display: flex; gap: 8px; align-items: center; }
+  .label { font-size: 12px; color: var(--muted); flex: none; }
+  select, input[type=number] {
+    background: var(--bg); color: var(--text); border: 1px solid var(--line);
+    border-radius: 9px; padding: 7px 9px; font: inherit; font-size: 14px;
+  }
+  /* 只读标记（如「步数 8 · 锁定」）：看起来像参数，但明确不可点 */
+  .pill {
+    font-size: 12px; color: var(--muted); background: var(--bubble);
+    border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px;
+    font-variant-numeric: tabular-nums; flex: none;
+  }
+  #imgSeed { font-variant-numeric: tabular-nums; }
+  #imgPrompt { width: 100%; min-height: 74px; }
+  .bar { height: 7px; border-radius: 4px; background: var(--bubble); overflow: hidden; }
+  .bar > i { display: block; height: 100%; width: 0%; background: var(--accent); transition: width .3s; }
+  .status { font-size: 12px; color: var(--muted); margin-top: 7px; font-variant-numeric: tabular-nums; }
+  #out { width: 100%; border-radius: 12px; display: none; margin-top: 2px; }
+  #out.show { display: block; }
+  .hint { font-size: 12px; color: var(--muted); line-height: 1.7; }
+</style>
+</head>
+<body>
+<header>
+  <span class="dot" id="dot"></span>
+  <div>
+    <div class="title">Pocket Model Studio</div>
+    <div class="model" id="model">连接中…</div>
+  </div>
+  <span class="spacer"></span>
+  <button class="ghost" id="gear" title="采样参数">参数</button>
+  <button class="ghost" id="clear">清空</button>
+</header>
+
+<div id="banner"></div>
+
+<!-- 对话模式 -->
+<div id="chat">
+  <div class="empty" id="empty">
+    <b>端侧模型已就绪</b>
+    推理全部在本机完成，逐 token 流式输出。<br>
+    输入问题开始对话。
+  </div>
+</div>
+
+<div id="params">
+  <label>最大长度 <input id="pMax" type="number" min="16" max="4096" step="64" value="1024"></label>
+  <label>temperature <input id="pTemp" type="number" min="0" max="2" step="0.1" value="0.7"></label>
+  <label>top_k <input id="pTopK" type="number" min="0" max="200" step="1" value="40"></label>
+  <label>top_p <input id="pTopP" type="number" min="0" max="1" step="0.05" value="0.95"></label>
+  <label><input id="pNoThink" type="checkbox" checked> 关闭思考</label>
+</div>
+
+<footer id="chatFooter">
+  <textarea id="input" rows="1" placeholder="说点什么…"></textarea>
+  <button class="send" id="send">发送</button>
+  <button class="send stop" id="stop" style="display:none">停止</button>
+</footer>
+
+<!-- 生图模式 -->
+<div id="img">
+  <div class="card">
+    <textarea id="imgPrompt" placeholder="描述你想要的画面，例如：a lovely cat, soft light, 35mm"></textarea>
+    <div class="row" style="margin-top:10px">
+      <span class="label">尺寸</span>
+      <!-- 预设 + 自由输入：和 App 卡片上的分辨率语义一致。以前是固定 select（含 640/768），
+           768² 在 v73 上必 OOM，640² 也只是白白失败一次。 -->
+      <input id="imgSize" type="number" list="sizeList" value="320" min="64" max="1024" step="16"
+             style="width:88px" autocomplete="off">
+      <datalist id="sizeList">
+        <option value="320"></option>
+        <option value="512"></option>
+      </datalist>
+      <!-- 步数锁死 8：Turbo 是 8 步蒸馏模型，步数、sigmas 与权重是配套训出来的，
+           改了只会画出糊图或半成品，所以这里不给改，只做只读展示。 -->
+      <span class="label" style="margin-left:6px">步数</span>
+      <span class="pill" id="stepsPill">8 · 锁定</span>
+      <span class="spacer"></span>
+      <button class="send" id="genBtn">生成</button>
+    </div>
+    <div class="row" style="margin-top:8px">
+      <span class="label">种子</span>
+      <input id="imgSeed" type="number" value="-1" min="-1" max="4294967295" step="1"
+             style="width:132px" autocomplete="off" inputmode="numeric">
+      <button class="ghost" id="seedDice" title="换一个随机种子">随机</button>
+      <span class="spacer"></span>
+      <span class="label" id="seedUsed"></span>
+    </div>
+    <div style="margin-top:10px">
+      <div class="bar"><i id="genBar"></i></div>
+      <div class="status" id="genStatus">就绪</div>
+    </div>
+  </div>
+  <img id="out" alt="生成结果">
+  <div class="hint">
+    <b>步数固定 8</b>（Turbo 是 8 步蒸馏模型，步数与 sigmas、权重配套训练，改了只会出糊图）。<br>
+    320² 约 1 分钟，512² 约 4 分钟。DiT 与 VAE 解码都在 NPU（Hexagon HTP）上跑，
+    <b>只有文本编码在 CPU</b>。生成期间请保持本页在前台。<br>
+    尺寸可填 64~1024（必须是 16 的倍数）。种子填 <b>-1</b> 每次随机、点「随机」抽一个，
+    填定值则复现同一张图；随机时实际用的种子会回填到输入框。<br>
+    cfg 固定 1.0 —— 调大会走 CFG 双分支（batch=2），当前分段链不支持。
+  </div>
+</div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const chat = $('chat'), input = $('input'), sendBtn = $('send'), stopBtn = $('stop'), banner = $('banner');
+let history = [];
+let busy = false;
+let backendOk = false;
+let kind = '';
+// cfg 由 /health 下发的实例参数决定（Turbo 恒为 1.0）。以前页面写死 6.0，这是 11-12
+// 「点生成 19 秒后进程 SIGABRT」的根因：cfg>1 → uncond 双分支 → batch=2 → 分段链断言失败。
+let cfgScale = 1.0;
+let sizeTouched = false;
+// 生成长度 / 上下文以实例参数为准（/health 下发），不在页面里写死
+let genMax = 8192;
+let ctxMax = 32768;
+// 步数锁定：Turbo 是 8 步蒸馏模型，步数和 sigmas/权重配套。页面上不给改，
+// 值以 /health 下发的实例步数为准（模型包里就是 8），避免"显示的"和"实际发的"打架。
+let lockSteps = 8;
+
+// ---- 尺寸下拉：跟模型包声明对齐 ----
+// 每个包只导了一种 patch 网格的 context 链，选错尺寸必然报错，所以由 /health 的 sizes 决定能选什么。
+let sizesKey = '';
+function applySizes(list) {
+  if (!Array.isArray(list) || !list.length) return;
+  const key = list.join(',');
+  if (key === sizesKey) return;
+  sizesKey = key;
+  // 预设档位塞进 datalist（尺寸框已改成「预设 + 自由输入」的 number input），
+  // 当前值若不在预设里说明是用户自定义的，保持不动。
+  const dl = $('sizeList');
+  if (dl) dl.innerHTML = list.map((v) => '<option value="' + v + '"></option>').join('');
+  if (!$('imgSize').value) $('imgSize').value = list[0];
+}
+
+// ---- 状态轮询：决定显示对话还是生图 ----
+let maxTouched = false;
+$('pMax').addEventListener('input', () => { maxTouched = true; });
+$('imgSize').addEventListener('input', () => { sizeTouched = true; });
+
+async function poll() {
+  try {
+    const r = await fetch('/health', { cache: 'no-store' });
+    const j = await r.json();
+    backendOk = j.status === 'ok';
+    kind = j.kind || '';
+    if (Number(j.n_predict) > 0) genMax = Number(j.n_predict);
+    if (Number(j.n_ctx) > 0) ctxMax = Number(j.n_ctx);
+    applySizes(j.sizes);
+    // 生成参数以实例设置为准；用户手动改过尺寸后就不再覆盖
+    if (Number(j.cfg_scale) > 0) cfgScale = Number(j.cfg_scale);
+    if (Number(j.size) > 0 && !sizeTouched) $('imgSize').value = String(j.size);
+    // 步数只读：跟随实例设置，不提供任何入口修改
+    if (Number(j.steps) > 0) {
+      lockSteps = Number(j.steps);
+      $('stepsPill').textContent = lockSteps + ' · 锁定';
+    }
+    // 长度上限跟着上下文走；用户手动改过就不再覆盖
+    const maxEl = $('pMax');
+    const cap = Math.max(16, ctxMax - 1);
+    maxEl.max = cap;
+    if (!maxTouched) maxEl.value = Math.min(genMax, cap);
+    document.body.classList.toggle('mode-image', kind === 'image');
+    $('dot').className = 'dot ' + (backendOk ? 'ok' : 'off');
+    $('model').textContent = backendOk
+      ? (j.model || '模型已加载') + ' · :' + j.backend_port
+      : '服务未运行';
+    if (!backendOk) {
+      banner.classList.add('show');
+      banner.textContent = '后端服务没有在运行：回到 App 的「服务」页打开开关，再刷新本页。';
+    } else {
+      banner.classList.remove('show');
+    }
+  } catch (e) {
+    backendOk = false;
+    $('dot').className = 'dot off';
+    $('model').textContent = '网关已断开';
+    banner.classList.add('show');
+    banner.textContent = '连不上本机网关（App 可能被系统挂起或已关闭）。';
+  }
+}
+poll(); setInterval(poll, 3000);
+
+// ---- 参数面板 ----
+$('gear').addEventListener('click', () => {
+  const on = $('params').classList.toggle('show');
+  $('gear').classList.toggle('on', on);
+});
+
+// ---- 对话 ----
+function addMsg(role, text, meta) {
+  $('empty')?.remove();
+  const div = document.createElement('div');
+  div.className = 'msg ' + (role === 'user' ? 'user' : role === 'err' ? 'err' : 'bot');
+  div.textContent = text;
+  if (meta) {
+    const m = document.createElement('div');
+    m.className = 'meta';
+    m.textContent = meta;
+    div.appendChild(m);
+  }
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function addTyping() {
+  $('empty')?.remove();
+  const div = document.createElement('div');
+  div.className = 'msg bot';
+  div.innerHTML = '<span class="typing"><i></i><i></i><i></i></span>';
+  chat.appendChild(div);
+  chat.scrollTop = chat.scrollHeight;
+  return div;
+}
+
+function buildPrompt(q) {
+  if (history.length === 0) return q;
+  let s = '以下是此前的对话记录：\n';
+  for (const h of history) s += (h.role === 'assistant' ? '助手：' : '用户：') + h.content + '\n';
+  s += '\n现在请直接回答这个问题（不要复述上面的记录）：' + q;
+  return s;
+}
+
+// 逐行吃 SSE。按字节流处理，不能假设一个 chunk 正好是若干整行。
+async function readSse(resp, onEvent) {
+  const reader = resp.body.getReader();
+  const dec = new TextDecoder();
+  let buf = '';
+  for (;;) {
+    const { value, done } = await reader.read();
+    if (done) break;
+    buf += dec.decode(value, { stream: true });
+    let i;
+    while ((i = buf.indexOf('\n\n')) >= 0) {
+      const raw = buf.slice(0, i);
+      buf = buf.slice(i + 2);
+      for (const line of raw.split('\n')) {
+        if (!line.startsWith('data:')) continue;
+        const data = line.slice(5).trim();
+        if (!data || data === '[DONE]') continue;
+        let ev;
+        try { ev = JSON.parse(data); } catch (e) { continue; }
+        onEvent(ev);
+      }
+    }
+  }
+}
+
+function fmtSecs(ms) { return (ms / 1000).toFixed(1); }
+
+async function send() {
+  const q = input.value.trim();
+  if (!q || busy) return;
+  if (!backendOk) { banner.classList.add('show'); return; }
+
+  busy = true;
+  sendBtn.disabled = true;
+  sendBtn.style.display = 'none';
+  stopBtn.style.display = '';
+  stopBtn.disabled = false;
+  addMsg('user', q);
+  input.value = ''; autoGrow();
+  const bubble = addTyping();
+
+  const t0 = performance.now();
+  let text = '';
+  let nOut = 0;
+  let nPrompt = 0;
+  let cancelled = false;
+  let truncated = false;
+  let error = null;
+
+  const tick = setInterval(() => {
+    if (!nOut) return;
+    const secs = (performance.now() - t0) / 1000;
+    setMeta(bubble, [
+      nPrompt ? 'prefill ' + nPrompt + ' tok' : '',
+      nOut + ' tok',
+      secs > 0.3 ? (nOut / secs).toFixed(2) + ' t/s' : '',
+      '已用 ' + secs.toFixed(0) + ' s',
+    ]);
+  }, 300);
+
+  try {
+    const r = await fetch('/api/completion', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: buildPrompt(q),
+        n_predict: Number($('pMax').value) || genMax,
+        temperature: Number($('pTemp').value),
+        top_k: Number($('pTopK').value),
+        top_p: Number($('pTopP').value),
+        no_think: $('pNoThink').checked,
+        stream: true,
+      }),
+    });
+    if (!r.ok) {
+      const j = await r.json().catch(() => ({}));
+      throw new Error(j.error || ('HTTP ' + r.status));
+    }
+    if (!r.body || !r.body.getReader) throw new Error('当前浏览器不支持流式读取');
+
+    bubble.className = 'msg bot';
+    bubble.textContent = '';
+    const body = document.createElement('span');
+    bubble.appendChild(body);
+
+    await readSse(r, (ev) => {
+      if (ev.error) { error = String(ev.error); return; }
+      if (ev.token) {
+        nOut++;
+        text += ev.token;
+        body.textContent = text;
+        bubble.classList.add('cursor');
+        chat.scrollTop = chat.scrollHeight;
+      }
+      if (ev.done) {
+        nPrompt = Number(ev.n_prompt) || 0;
+        truncated = !!ev.truncated;
+        cancelled = !!ev.cancelled;
+      }
+    });
+
+    const wall = fmtSecs(performance.now() - t0);
+    const finalOut = nOut;
+    bubble.classList.remove('cursor');
+    if (error) throw new Error(error);
+    body.textContent = text || (cancelled ? '(已停止)' : '(空回复)');
+
+    const kvs = [
+      nPrompt ? 'prefill ' + nPrompt + ' tok' : '',
+      finalOut + ' tok',
+      (cancelled ? '已停止' : '完成') + ' · ' + wall + ' s',
+    ].filter(Boolean);
+    setMeta(bubble, kvs);
+
+    // 被长度上限截断的回复不进历史：否则下一轮模型会顺着这半句往下写，
+    // 看起来就像「半截的思考段」（根因不是模板，是把截断文本当成了完整上下文）
+    const answer = text.trim();
+    if (truncated) {
+      const w = document.createElement('div');
+      w.className = 'warn';
+      w.textContent = '已到生成长度上限（' + $('pMax').value + ' tok），本条回复被截断、不计入上下文。';
+      bubble.appendChild(w);
+    }
+    if (nPrompt >= ctxMax - 1) {
+      const w = document.createElement('div');
+      w.className = 'warn';
+      w.textContent = '提示词已达上下文上限（' + ctxMax + ' tok），超出部分被截断。';
+      bubble.appendChild(w);
+    }
+    if (answer && !truncated && !cancelled) {
+      history.push({ role: 'user', content: q });
+      history.push({ role: 'assistant', content: answer });
+      if (history.length > 12) history = history.slice(-12);
+    }
+  } catch (e) {
+    bubble.className = 'msg err';
+    bubble.classList.remove('cursor');
+    bubble.textContent = '请求失败：' + e.message;
+  } finally {
+    clearInterval(tick);
+    busy = false;
+    sendBtn.disabled = false;
+    sendBtn.style.display = '';
+    stopBtn.style.display = 'none';
+    chat.scrollTop = chat.scrollHeight;
+    // 不自动 focus：手机上会把键盘又弹起来，刚好挡住刚生成的内容
+  }
+}
+
+function setMeta(bubble, parts) {
+  let m = bubble.querySelector('.meta');
+  if (!m) {
+    m = document.createElement('div');
+    m.className = 'meta';
+    bubble.appendChild(m);
+  }
+  m.textContent = parts.filter(Boolean).join(' · ');
+}
+
+// 停止：让设备侧自己收尾（/cancel），而不是掐断连接 —— 掐断会留下半截 KV 状态
+stopBtn.addEventListener('click', async () => {
+  stopBtn.disabled = true;
+  try { await fetch('/cancel', { method: 'POST' }); } catch (e) {}
+});
+
+function autoGrow() {
+  input.style.height = 'auto';
+  input.style.height = Math.min(input.scrollHeight, 132) + 'px';
+}
+input.addEventListener('input', autoGrow);
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+});
+sendBtn.addEventListener('click', send);
+$('clear').addEventListener('click', () => {
+  history = [];
+  chat.innerHTML = '';
+  const d = document.createElement('div');
+  d.className = 'empty'; d.id = 'empty';
+  d.innerHTML = '<b>对话已清空</b>';
+  chat.appendChild(d);
+});
+
+// ---- 生图 ----
+let genStart = 0, genTimer = null;
+
+function setBar(p, text) {
+  $('genBar').style.width = Math.max(0, Math.min(1, p)) * 100 + '%';
+  if (text) $('genStatus').textContent = text;
+}
+
+async function pollProgress() {
+  if (!genStart) return;
+  const el = (performance.now() - genStart) / 1000;
+  try {
+    const r = await fetch('/api/sdapi/v1/progress?skip_current_image=true', { cache: 'no-store' });
+    const j = await r.json();
+    const st = j.state || {};
+    const step = st.sampling_step || 0;
+    const steps = st.sampling_steps || 0;
+    const p = steps > 0 ? step / steps : (j.progress || 0);
+    setBar(p, steps > 0
+      ? ('采样 ' + step + '/' + steps + ' · 已用 ' + el.toFixed(0) + ' s')
+      : ('准备中（文本编码 / 首段链加载）· ' + el.toFixed(0) + ' s'));
+  } catch (e) {
+    setBar(0, '生成中 · 已用 ' + el.toFixed(0) + ' s');
+  }
+}
+
+// 种子输入：-1 或留空 = 每次随机；否则必须是 0~2^32-1 的整数（超出范围后端会静默截断，不如前端拦下）
+function readSeed() {
+  const raw = String($('imgSeed').value || '').trim();
+  if (raw === '' || raw === '-1') return -1;
+  const n = Number(raw);
+  if (!Number.isInteger(n) || n < -1 || n > 4294967295) return null;
+  return n;
+}
+
+$('seedDice').addEventListener('click', () => {
+  // 随机一个 32 位种子填进去，想复现同一张图就用它
+  const n = Math.floor(Math.random() * 4294967296);
+  $('imgSeed').value = String(n);
+  $('seedUsed').textContent = '';
+});
+
+async function generate() {
+  const prompt = $('imgPrompt').value.trim();
+  if (!prompt) { $('imgPrompt').focus(); return; }
+  if (!backendOk) { banner.classList.add('show'); return; }
+  if (genStart) return;
+
+  const size = Number($('imgSize').value);
+  // 步数只读：Turbo 的步数与 sigmas/权重配套，页面上没有入口改
+  const steps = lockSteps;
+  // 尺寸校验放在前端：不是 16 的倍数会让 VAE 下采样 / DiT patch 切不整，后端会直接报错
+  if (!Number.isFinite(size) || size < 64 || size > 1024 || size % 16 !== 0) {
+    setBar(0, '尺寸必须是 64~1024 且为 16 的倍数（当前 ' + $('imgSize').value + '）');
+    return;
+  }
+  const seed = readSeed();
+  if (seed === null) {
+    setBar(0, '种子必须是 -1（随机）或 0~4294967295 的整数（当前 ' + $('imgSeed').value + '）');
+    return;
+  }
+  $('seedUsed').textContent = '';
+  genStart = performance.now();
+  $('genBtn').disabled = true;
+  $('out').classList.remove('show');
+  setBar(0, '准备中…');
+  genTimer = setInterval(pollProgress, 2000);
+
+  try {
+    const r = await fetch('/api/sdapi/v1/txt2img', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        prompt: prompt, steps: steps, width: size, height: size,
+        // cfg 必须跟随实例设置：Turbo 是 8 步蒸馏模型，cfg>1 会启用 uncond 双分支（batch=2），
+        // 而分段链的 timestep 下发是单路的 → 建图时 GGML_ASSERT 崩进程。
+        cfg_scale: cfgScale, sampler_name: 'euler', seed: seed,
+      }),
+    });
+    const j = await r.json();
+    if (!r.ok) throw new Error(j.error || j.detail || ('HTTP ' + r.status));
+    const imgs = j.images || [];
+    if (!imgs.length) throw new Error('后端没有返回图片');
+
+    const src = imgs[0].startsWith('data:') ? imgs[0] : 'data:image/png;base64,' + imgs[0];
+    $('out').src = src;
+    $('out').classList.add('show');
+    // 后端在 info.seed 里回报实际用的种子（传 -1 时才知道抽中了什么）。
+    // 注意 sdapi 的 info 是 **JSON 字符串**（`out["info"] = jsoninfo.dump()`，A1111 的惯例），
+    // 不是对象 —— 只判 object 会永远拿不到，回填就失效。
+    let used = seed;
+    let info = j.info;
+    if (typeof info === 'string') {
+      try { info = JSON.parse(info); } catch (e) { info = null; }
+    }
+    if (info && typeof info === 'object' && Number.isFinite(Number(info.seed))) {
+      used = Number(info.seed);
+    } else if (Array.isArray(j.all_seeds) && j.all_seeds.length && Number.isFinite(Number(j.all_seeds[0]))) {
+      used = Number(j.all_seeds[0]);
+    }
+    if (seed === -1 && used >= 0) {
+      // 随机出来的种子回填到输入框：下次想复现同一张图直接点生成
+      $('imgSeed').value = String(used);
+    }
+    const el = (performance.now() - genStart) / 1000;
+    const tail = used >= 0 ? ' · seed ' + used : '';
+    $('seedUsed').textContent = used >= 0 ? '本次种子 ' + used : '';
+    setBar(1, '完成 · ' + el.toFixed(1) + ' s（' + steps + ' 步 ' + size + '²' + tail + '）');
+  } catch (e) {
+    setBar(0, '失败：' + e.message);
+  } finally {
+    clearInterval(genTimer); genTimer = null; genStart = 0;
+    $('genBtn').disabled = false;
+  }
+}
+
+$('genBtn').addEventListener('click', generate);
+
+// ---- 键盘适配 ----
+// WebView 里弹键盘不会触发页面 resize（adjustResize 没生效），底部输入区被整块挡在后面。
+// 用 visualViewport 的高度反向收缩 body，键盘收起时自动复原。
+(function fitKeyboard() {
+  const vv = window.visualViewport;
+  if (!vv) return;
+  const apply = () => {
+    document.body.style.setProperty('--app-h', Math.round(vv.height) + 'px');
+    if (chat) chat.scrollTop = chat.scrollHeight;
+  };
+  vv.addEventListener('resize', apply);
+  vv.addEventListener('scroll', apply);
+  apply();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+# ---- 构建产物 ----
+.gradle/
+.kotlin/
+app/build/
+local.properties
+
+# ---- 模型包 / 分发产物 ----
+# build/ 是「模型包 staging 目录」，里面 weights/ 是 9.3 GB 的硬链接（指向 D:\ 根的大文件），
+# runtime/bin 是 39 MB 的服务端二进制副本；dist/ 是打好的 .mlm（20 GB）。都不进仓库。
+/build/*
+!/build/qwen-image-split/
+/build/qwen-image-split/*
+!/build/qwen-image-split/manifest.json
+!/build/qwen-image-split/runtime/
+/build/qwen-image-split/runtime/*
+!/build/qwen-image-split/runtime/VERSION
+
+dist/
+
+# 权重 / 模型文件（体积大，且都是本地 D:\ 根目录硬链或下载来的）
+*.mlm
+*.gguf
+*.safetensors
+*.kvb
+*.bin
+
+# 调试产物
+*.log
+resp*.json

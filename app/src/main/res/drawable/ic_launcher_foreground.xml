@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- 一个简化的「箱体 + 电路」：代表模型容器与端侧推理 -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,26L78,38v24c0,12 -10,20 -24,22c-14,-2 -24,-10 -24,-22V38L54,26zM54,33L37,41v21c0,9 7,15 17,17c10,-2 17,-8 17,-17V41L54,33z" />
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M45,52h18v4h-18zM45,60h18v4h-18zM51,66h6v8h-6z" />
+    <path
+        android:fillColor="#FF4DB6AC"
+        android:pathData="M54,44m-3,0a3,3 0,1 1,6 0a3,3 0,1 1,-6 0" />
+</vector>

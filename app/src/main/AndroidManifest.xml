@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- 让用户可以把本 App 加进电池优化白名单：ColorOS/EMUI 这类 ROM 熄屏后会挂起应用，
+         表现是端口还在但所有连接超时。请求白名单是减少被冻结概率的关键一步。 -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+
+    <!-- usesCleartextTraffic：本 App 只连 127.0.0.1 上的本地推理服务，全部是明文 HTTP。
+         Android 9 (API 28) 起默认禁止明文流量，不打开这一项，健康检查会直接
+         抛 "Cleartext HTTP traffic not permitted"，UI 永远停在「启动中」。 -->
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
+        android:theme="@style/Theme.PocketModelStudio">
+    <!-- ★ 关键：没有这两行，QNN 在 App 里永远起不来。
+         libQnnHtpV*Stub.so 依赖 vendor 分区的 libcdsprpc.so（FastRPC 通往 Hexagon DSP
+         的唯一通道）。targetSdk 31+ 的 app 默认看不到 vendor 库，dlopen 直接失败，于是
+         QnnDsp 抛 "loadRemoteSymbols 4000 → Failed to load skel 4000 → 14001"，
+         这串报错跟"权限被封"长得一模一样，但根因只是链接命名空间。
+         shell 域能自动解析到它，所以 adb 命令行一直是好的，把排查带偏了很久。
+         required=false：非高通机型也不会因此装不上。 -->
+    <uses-native-library android:name="libcdsprpc.so" android:required="false" />
+    <uses-native-library android:name="libadsprpc.so" android:required="false" />
+    <uses-native-library android:name="libOpenCL.so" android:required="false" />
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".core.ServiceHost"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
+
+    </application>
+</manifest>
