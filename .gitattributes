@@ -1,0 +1,11 @@
+# 统一用 LF：本仓库的脚本/前端文件曾被 CRLF 坑过（设备端 sh 逐行报 "inaccessible or not found"）
+* text=auto eol=lf
+
+# 二进制：不要让 git 做行尾或 diff 处理
+*.so binary
+*.jar binary
+*.png binary
+*.gguf binary
+*.safetensors binary
+*.mlm binary
+*.kvb binary
