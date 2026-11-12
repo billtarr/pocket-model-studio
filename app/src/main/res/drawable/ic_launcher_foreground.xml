@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- 口袋 + 斜插的芯片。口袋是「随身」最省笔墨的符号，芯片是模型本身：
-     卡片下半截被袋身挡住，只露出上面一截 —— 装得下，也随时能取出来用。
-     几何与 branding/mark.svg 完全一致（卡片绕 (54,38) 逆时针 10°）。
-     最外沿距图标中心 ~30，落在自适应图标 66dp 安全区（圆心 54,54、半径 33）内。 -->
+<!-- 手机 + 口袋。手机竖着插在口袋里，下半截被袋身挡住，只露出上面一截 ——
+     「随身」这件事不用画手机壳或手，一个袋口横切就够了。
+     琥珀条是屏幕上的一道亮线，唯一的高饱和色，24px 仍可见。
+     最外沿距图标中心 ~31，落在自适应图标 66dp 安全区（圆心 54,54、半径 33）内。 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <group
-        android:pivotX="54"
-        android:pivotY="38"
-        android:rotation="-10">
-        <path
-            android:fillColor="#FFFFB300"
-            android:pathData="M46,26 h16 a3,3 0 0 1 3,3 v18 a3,3 0 0 1 -3,3 h-16 a3,3 0 0 1 -3,-3 v-18 a3,3 0 0 1 3,-3 z" />
-    </group>
+    <path
+        android:fillColor="#FFEFF6F3"
+        android:pathData="M49.5,20 h9 a5.5,5.5 0 0 1 5.5,5.5 v23 a5.5,5.5 0 0 1 -5.5,5.5 h-9 a5.5,5.5 0 0 1 -5.5,-5.5 v-23 a5.5,5.5 0 0 1 5.5,-5.5 z" />
 
-    <!-- 口袋：宽底、两侧微收，袋口是一道横线 -->
+    <path
+        android:fillColor="#FF14211F"
+        android:pathData="M50,22.4 h8 a3.6,3.6 0 0 1 3.6,3.6 v22.2 a3.6,3.6 0 0 1 -3.6,3.6 h-8 a3.6,3.6 0 0 1 -3.6,-3.6 v-22.2 a3.6,3.6 0 0 1 3.6,-3.6 z" />
+
+    <path
+        android:fillColor="#FFFFB300"
+        android:pathData="M48.4,25.4 h11.2 a2,2 0 0 1 2,2 v0.4 a2,2 0 0 1 -2,2 h-11.2 a2,2 0 0 1 -2,-2 v-0.4 a2,2 0 0 1 2,-2 z" />
+
     <path
         android:fillColor="#FFEFF6F3"
         android:pathData="M34,44 H74 L73,74 Q72.5,82 64,82 H44 Q35.5,82 35,74 Z" />
