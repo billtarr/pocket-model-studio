@@ -388,7 +388,7 @@ uag 调速器对 app 域进程与 shell 域待遇不同。
 |---|---|---|
 | 权重（`build/*/weights/`，9.3 GB + 5.3 GB） | 硬链接到 `D:\qwen-image-2.1-turbo-Q4_K_M.gguf` / `D:\Qwen3.5-9B-Q4_K_M.gguf`，git 会把内容实体化 | **已从工作区清理**；原件仍在 `D:\` 根目录，重新打包时链回来即可 |
 | runtime 副本（`build/*/runtime/{bin,lib,skel}`） | `libsd_server.so` 等的副本，真身已在 jniLibs | **已清理**，由 sd-split 的构建产物重新拷入 |
-| 打好的模型包（`.pm`，约 15 GB） | `pack_model.py pack` 可重新生成 | `D:\pm-packages\`（`qwen-image-2.1-turbo-split.pm` 9.26 GB、`qwen35-9b-split.pm` 5.32 GB，各带一份 ModelScope 模型卡 `.md`） |
+| 打好的模型包（`.pm`，约 15 GB） | `pack_model.py pack` 可重新生成 | `D:\pm-packages\`（`qwen-image-2.1-turbo-split.pm` 9.26 GB、`qwen35-9b-split.pm` 5.32 GB，各带一份 ModelScope 模型卡（上传时改成 README 再传）） |
 | APK | 构建产物 | `D:\pm-apk\pocket-model-studio-0.1.0-debug-20261115.apk`（留一份可直接安装的；源码可随时重建） |
 | `app/build/`、`.gradle/`、`.kotlin/` | 构建产物 | 已清理，`gradle assembleDebug` 重新生成 |
 
