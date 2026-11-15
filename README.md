@@ -5,8 +5,8 @@
 
 > 名字是暂定的。包名 `dev.pocketmodel.studio`。
 >
-> 📒 **改代码或排查前先看结论台账**：`C:\Users\normin\WorkBuddy\2026-10-27-09-59-46\docs\LEDGER.md`
-> （180 余条一行一句话，带状态：现行 / 推翻 / 待验 / 禁止）。本 README 讲「是什么」，
+> 📒 开发期维护着一份 **结论台账**（`LEDGER.md`，约 180 条、一行一句，带状态：
+> 现行 / 推翻 / 待验 / 禁止），**属于内部工作区、未随本仓库分发**。本 README 讲「是什么」，
 > 台账讲「什么成立、什么已经试死」。
 
 ---
@@ -46,7 +46,7 @@ studio-llm-hybrid
        → kvbr_cpu decode（CPU 4 线程）
 ```
 
-新增两个工具（`D:/llm-npu-vk/llama-old/examples/`）：
+新增两个工具（构建于 llama.cpp 的 `examples/` 分支，源码未随本仓库分发）：
 - **`sl-pre`**：替代 PC 的 `prepare()`，用 gguf + ggml 重算 embed/PLE → `x0.bin` / `ple_L.bin`
 - **`studio-llm-hybrid`**：上面的编排 + HTTP（`/health` `/props` `/completion`）
 
@@ -72,7 +72,7 @@ runtime/                           2.78 GB
 
 `entry.args` 用 `{model}` 指包根、`{weight.main}` 指权重、`{n_ctx}`/`{threads}` 指可调参数。
 
-> ★ 构建 / 打包 / 部署 / 验收的完整步骤见 **`C:/Users/normin/WorkBuddy/2026-10-27-09-59-46/docs\30-gemma4-e4b\hybrid-runbook.md`**。
+> ★ 构建 / 打包 / 部署 / 验收的完整步骤见内部文档 `docs/30-gemma4-e4b/hybrid-runbook.md`（未随本仓库分发）。
 
 **11 t/s 这个数字的来历**：早期在 `/data/local/tmp/plmtest` 手工搭同一布局时实测
 启动 12 s、两轮 **11.04 / 10.16 t/s**；App 域后来的记录是 **9.23 t/s**（口径偏低，已不采信）。
@@ -246,7 +246,7 @@ App 内用 WebView 打开，局域网地址就在卡片和设置页上，点一�
 
 ### Qwen-Image 在 APK 内跑通 QNN（2026-11-07，★ 关键配方）
 
-> 完整复现步骤（路径、编译命令、打包、验收判据、故障对照）见 **`C:/Users/normin/WorkBuddy/2026-10-27-09-59-46/docs\20-qwen-image-qnn\apk-runbook.md`**。本节只留结论与两条硬约束。
+> 完整复现步骤（路径、编译命令、打包、验收判据、故障对照）见内部文档 `docs/20-qwen-image-qnn/apk-runbook.md`（未随本仓库分发）。本节只留结论与两条硬约束。
 
 **结论：512²/8 步 `generate_image` 194.4~268.4 s（21.7~33.5 s/it，5 次实测区间），
 App 进程内 QNN 八段链直出，出图正确。** 波动主因**未定位**（37 ℃ 那次反而最慢，
@@ -436,7 +436,7 @@ branding/                         logo 的可编辑源文件（svg）+ 预览页
 build/qwen-image-split/           模型包 staging 的**手写源**：manifest.json + runtime/VERSION
                                  （weights/、runtime/bin 已清理，见下节「仓库范围」）
 tools/pack_model.py               模型包工具（init / runtime / scan / check / pack / list）
-（文档已统一迁到 C:/Users/normin/WorkBuddy/2026-10-27-09-59-46/docs\，见该目录 README.md）
+（详细文档见内部工作区的 `docs/`，未随本仓库分发）
 
 ```
 
@@ -551,4 +551,4 @@ llama-split 的 `--serve` **不是 HTTP**，是行协议（`PING`/`INFO`/`CHAT`/
 6. 多实例资源仲裁（RAM / DSP VA 预算）。
 7. SAF 导入流程真机走查（代码已写，只验证过命令行投放）。
 
-设计细节与踩坑见 `C:/Users/normin/WorkBuddy/2026-10-27-09-59-46/docs\10-pms-apk\architecture.md`（文档已迁出本仓库）。
+设计细节与踩坑见内部文档 `docs/10-pms-apk/architecture.md`（未随本仓库分发）。
