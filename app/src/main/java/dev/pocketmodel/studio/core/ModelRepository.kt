@@ -107,7 +107,7 @@ class ModelRepository(private val ctx: Context) {
     }
 
     /**
-     * 从 SAF 的 zip/.mlm 导入。返回导入结果或抛出可读错误。
+     * 从 SAF 的 zip/.pm 导入。返回导入结果或抛出可读错误。
      *
      * 7 GB 的包要写两份（解压到 cache、再搬进 filesDir），所以中间必须能报进度，
      * 否则界面就是「什么都没发生，只有占用空间在长」。

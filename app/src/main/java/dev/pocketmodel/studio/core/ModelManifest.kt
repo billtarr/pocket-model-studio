@@ -11,7 +11,7 @@ import kotlinx.serialization.json.intOrNull
 /**
  * 模型包规范（schema 1）。
  *
- * 一个模型包 = 一个目录（或 .mlm 压缩包），必须含 manifest.json；
+ * 一个模型包 = 一个目录（或 .pm 压缩包），必须含 manifest.json；
  * weights/ 放权重；可选 runtime/ 放**这个模型专用的运行框架**；可选 webui/ 放前端静态文件。
  *
  * 为什么运行框架随包走：不同模型对执行器版本极其敏感 —— Qwen-Image 要绑 QNN skel 版本与

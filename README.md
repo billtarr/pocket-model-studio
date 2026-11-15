@@ -17,7 +17,7 @@
 |---|---|
 | Compose UI（服务 / 模型 / 设置三页） | ✅ |
 | 模型包规范 `manifest.json`（schema 1） | ✅ |
-| 模型导入（SAF 选 .mlm/.zip → 校验 → 落地） | ✅ |
+| 模型导入（SAF 选 .pm/.zip → 校验 → 落地） | ✅ |
 | 进程监管（exec / 环境注入 / 日志 / 健康检查 / 优雅停止） | ✅ |
 | **运行框架随模型包**（`runtime/` 优先，内置兜底） | ✅ 实测 APK 不装任何原生库也能跑 |
 | 三类服务的 runtime 抽象（llm / image / video） | ✅ 骨架，`qnn-*` 二进制待打包 |
@@ -50,7 +50,7 @@ studio-llm-hybrid
 - **`sl-pre`**：替代 PC 的 `prepare()`，用 gguf + ggml 重算 embed/PLE → `x0.bin` / `ple_L.bin`
 - **`studio-llm-hybrid`**：上面的编排 + HTTP（`/health` `/props` `/completion`）
 
-### 打包成 PLM（`dist/plm-gemma4-e4b.mlm`，**7.96 GB / 96 文件**）
+### 打包成 PLM（`dist/plm-gemma4-e4b.pm`，**7.96 GB / 96 文件**）
 
 运行框架随包，但**可执行文件除外**：`targetSdk 35` 只允许从 nativeLibraryDir 执行，
 所以四个二进制同时进 APK 的 jniLibs，包内同名文件在启动时被换成软链（几乎不占体积）。
@@ -217,7 +217,7 @@ App 内用 WebView 打开，局域网地址就在卡片和设置页上，点一�
 
 改 WebUI 的顺序（2026-11-11 实测）：
 
-- **只改 UI 就只重装 APK**，权重包不用动。当前主包 `dist/qwen35-9b-split.mlm` 里
+- **只改 UI 就只重装 APK**，权重包不用动。当前主包 `dist/qwen35-9b-split.pm` 里
   `manifest.webui = null`、没有 `webui/` 目录，页面 100% 来自 assets。
 - **模型包里一旦有 `webui/index.html`，就永久盖住 assets 那份** —— 之后改 assets 对这个模型
   不再生效，改的是「改了没反应」的经典原因。
@@ -388,7 +388,7 @@ uag 调速器对 app 域进程与 shell 域待遇不同。
 |---|---|
 | `build/qwen-image-split/weights/`（9.3 GB） | 硬链接到 `D:\qwen-image-2.1-turbo-Q4_K_M.gguf` 等，git 会把内容实体化 |
 | `build/qwen-image-split/runtime/bin/`（39 MB） | `libsd_server.so` 的副本，真身已在 jniLibs |
-| `dist/*.mlm`（20 GB） | 打好的模型包；`pack_model.py pack` 可重新生成 |
+| `dist/*.pm`（20 GB） | 打好的模型包；`pack_model.py pack` 可重新生成 |
 | `app/build/`、`.gradle/`、`.kotlin/` | 构建产物 |
 | `local.properties` | 本机 SDK 路径 |
 
@@ -464,10 +464,10 @@ python pack_model.py init  ../examples/my-model --kind llm --runtime llama-cpu-m
 cp /d/gemma-4-E4B-Q8_0.gguf ../examples/my-model/weights/
 python pack_model.py scan  ../examples/my-model      # 自动补 weights 列表（按文件名猜 role）
 python pack_model.py check ../examples/my-model      # 校验：字段/文件/大小/runtime 入口
-python pack_model.py pack  ../examples/my-model -o dist/my-model.mlm
+python pack_model.py pack  ../examples/my-model -o dist/my-model.pm
 ```
 
-把 `.mlm` 传到手机，在 App 的「模型」页点「导入」即可。
+把 `.pm` 传到手机，在 App 的「模型」页点「导入」即可。
 
 ⚠️ 打包用 **store 模式不压缩**：权重本身已压缩，deflate 只浪费 CPU 和时间。
 
@@ -536,7 +536,7 @@ llama-split 的 `--serve` **不是 HTTP**，是行协议（`PING`/`INFO`/`CHAT`/
    ColorOS 的后台白名单（设置页已有电池优化入口，还需要「睡眠待机优化」提示），
    要么改用前台服务 + 常驻通知常亮屏幕的策略，需要真机验证哪种在目标 ROM 上真的有效。
 4. `chainrun` 加 HTTP 服务层，图片/视频才能作为常驻服务被 API 调用。
-5. 模型包签名与来源校验（现在 `.mlm` 是明文 zip，会执行里面的任意二进制）。
+5. 模型包签名与来源校验（现在 `.pm` 是明文 zip，会执行里面的任意二进制）。
 6. 多实例资源仲裁（RAM / DSP VA 预算）。
 7. SAF 导入流程真机走查（代码已写，只验证过命令行投放）。
 

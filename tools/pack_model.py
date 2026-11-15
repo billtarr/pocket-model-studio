@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pocket Model Studio —— 模型包打包工具
 
-模型包（.mlm，本质是 zip store 模式）结构：
+模型包（.pm，本质是 zip store 模式）结构：
 
     manifest.json          # 必需，描述怎么跑这个模型
     weights/...            # 权重：gguf / safetensors / QNN context binary
@@ -25,8 +25,8 @@ llama.cpp 的 MTP 头绑 commit、视频模型又是另一套）。固定在 APK
     python pack_model.py scan ./my-model
     # 4) 校验并打包
     python pack_model.py check ./my-model
-    python pack_model.py pack  ./my-model -o dist/gemma4-e4b-q8.mlm
-    python pack_model.py list  dist/gemma4-e4b-q8.mlm
+    python pack_model.py pack  ./my-model -o dist/gemma4-e4b-q8.pm
+    python pack_model.py list  dist/gemma4-e4b-q8.pm
 """
 from __future__ import annotations
 
@@ -379,7 +379,7 @@ def cmd_pack(args) -> None:
     d = Path(args.dir)
     cmd_check(argparse.Namespace(dir=str(d)))
     mf = load_manifest(d)
-    out = Path(args.out or f"dist/{mf['id']}.mlm")
+    out = Path(args.out or f"dist/{mf['id']}.pm")
     out.parent.mkdir(parents=True, exist_ok=True)
 
     files: list[Path] = [d / "manifest.json"]
@@ -484,7 +484,7 @@ def main() -> None:
     p.add_argument("dir")
     p.set_defaults(func=cmd_check)
 
-    p = sub.add_parser("pack", help="打包成 .mlm")
+    p = sub.add_parser("pack", help="打包成 .pm")
     p.add_argument("dir")
     p.add_argument("-o", "--out", default=None)
     p.add_argument("--part-size", type=int, default=DEFAULT_PART_SIZE,
@@ -493,7 +493,7 @@ def main() -> None:
                         "4 GiB 以上的单 entry 读不出来")
     p.set_defaults(func=cmd_pack)
 
-    p = sub.add_parser("list", help="列出 .mlm 内容")
+    p = sub.add_parser("list", help="列出 .pm 内容")
     p.add_argument("package")
     p.set_defaults(func=cmd_list)
 
