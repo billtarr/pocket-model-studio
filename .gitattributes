@@ -8,4 +8,5 @@
 *.gguf binary
 *.safetensors binary
 *.mlm binary
+*.pm binary
 *.kvb binary

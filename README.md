@@ -6,7 +6,7 @@
 > 名字是暂定的。包名 `dev.pocketmodel.studio`。
 >
 > 📒 **改代码或排查前先看结论台账**：`C:\Users\normin\WorkBuddy\2026-10-27-09-59-46\docs\LEDGER.md`
-> （51 条一行一句话，带状态：现行 / 推翻 / 待验 / 禁止）。本 README 讲「是什么」，
+> （180 余条一行一句话，带状态：现行 / 推翻 / 待验 / 禁止）。本 README 讲「是什么」，
 > 台账讲「什么成立、什么已经试死」。
 
 ---
@@ -50,7 +50,7 @@ studio-llm-hybrid
 - **`sl-pre`**：替代 PC 的 `prepare()`，用 gguf + ggml 重算 embed/PLE → `x0.bin` / `ple_L.bin`
 - **`studio-llm-hybrid`**：上面的编排 + HTTP（`/health` `/props` `/completion`）
 
-### 打包成 PLM（`dist/plm-gemma4-e4b.pm`，**7.96 GB / 96 文件**）
+### 打包成 PLM（**7.96 GB / 96 文件**，产物不进仓库）
 
 运行框架随包，但**可执行文件除外**：`targetSdk 35` 只允许从 nativeLibraryDir 执行，
 所以四个二进制同时进 APK 的 jniLibs，包内同名文件在启动时被换成软链（几乎不占体积）。
@@ -217,7 +217,7 @@ App 内用 WebView 打开，局域网地址就在卡片和设置页上，点一�
 
 改 WebUI 的顺序（2026-11-11 实测）：
 
-- **只改 UI 就只重装 APK**，权重包不用动。当前主包 `dist/qwen35-9b-split.pm` 里
+- **只改 UI 就只重装 APK**，权重包不用动。当前主包 `D:\pm-packages\qwen35-9b-split.pm` 里
   `manifest.webui = null`、没有 `webui/` 目录，页面 100% 来自 assets。
 - **模型包里一旦有 `webui/index.html`，就永久盖住 assets 那份** —— 之后改 assets 对这个模型
   不再生效，改的是「改了没反应」的经典原因。
@@ -384,13 +384,20 @@ uag 调速器对 app 域进程与 shell 域待遇不同。
 | `build/qwen-image-split/runtime/VERSION` | 同上，运行时版本标记 |
 | `tools/*.py` | 打包工具 |
 
-| 不入库 | 原因 |
-|---|---|
-| `build/qwen-image-split/weights/`（9.3 GB） | 硬链接到 `D:\qwen-image-2.1-turbo-Q4_K_M.gguf` 等，git 会把内容实体化 |
-| `build/qwen-image-split/runtime/bin/`（39 MB） | `libsd_server.so` 的副本，真身已在 jniLibs |
-| `dist/*.pm`（20 GB） | 打好的模型包；`pack_model.py pack` 可重新生成 |
-| `app/build/`、`.gradle/`、`.kotlin/` | 构建产物 |
-| `local.properties` | 本机 SDK 路径 |
+| 不入库 | 原因 | 现在在哪 |
+|---|---|---|
+| 权重（`build/*/weights/`，9.3 GB + 5.3 GB） | 硬链接到 `D:\qwen-image-2.1-turbo-Q4_K_M.gguf` / `D:\Qwen3.5-9B-Q4_K_M.gguf`，git 会把内容实体化 | **已从工作区清理**；原件仍在 `D:\` 根目录，重新打包时链回来即可 |
+| runtime 副本（`build/*/runtime/{bin,lib,skel}`） | `libsd_server.so` 等的副本，真身已在 jniLibs | **已清理**，由 sd-split 的构建产物重新拷入 |
+| 打好的模型包（`.pm`，约 15 GB） | `pack_model.py pack` 可重新生成 | `D:\pm-packages\`（`qwen-image-2.1-turbo-split.pm` 9.26 GB、`qwen35-9b-split.pm` 5.32 GB，各带一份 ModelScope 模型卡 `.md`） |
+| APK | 构建产物 | `D:\pm-apk\pocket-model-studio-0.1.0-debug-20261115.apk`（留一份可直接安装的；源码可随时重建） |
+| `app/build/`、`.gradle/`、`.kotlin/` | 构建产物 | 已清理，`gradle assembleDebug` 重新生成 |
+
+**清理后的工作区**：`91 MB` = `.git` 27 MB + `app/` 64 MB（jniLibs 的 16 个 `.so` 是大头）
++ 源码 / 脚本 / `branding` 若干。`git status` 干净，可直接 `git push`。
+
+> 验证过：清干净后跑一次 `gradle assembleDebug --offline`（1 分 38 秒）能正常出包，
+> 且与清理前那份 APK **113 个条目逐字节相同**（只有 zip 对齐填充不同），
+> 说明这次清掉的都是可再生的东西。
 
 **`libsd_server.so` 的来源**：`D:\sd-split` 的 `build-hex/bin/sd-server`，strip 后改名。
 更新流程（三段切分链的代码都在 sd-split 的 `overlay/` 里，**不要在本仓库改 C++**）：
@@ -425,8 +432,9 @@ app/src/main/java/dev/pocketmodel/studio/
 
 app/src/main/jniLibs/             ← ★ 入口二进制都在这儿：libsd_server / libqnn_dit / libchainrun
                                      + QNN 2.51 库、libOpenCL、libomp（见复现手册 §4.4）
-examples/                         三个可直接打包的 manifest 样例
-  └── gemma4-e4b-q8-mtp/runtime/  随包运行框架示例（205 MB）
+branding/                         logo 的可编辑源文件（svg）+ 预览页，不进 APK
+build/qwen-image-split/           模型包 staging 的**手写源**：manifest.json + runtime/VERSION
+                                 （weights/、runtime/bin 已清理，见下节「仓库范围」）
 tools/pack_model.py               模型包工具（init / runtime / scan / check / pack / list）
 （文档已统一迁到 C:/Users/normin/WorkBuddy/2026-10-27-09-59-46/docs\，见该目录 README.md）
 
@@ -458,13 +466,16 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ## 做一个模型包
 
+**打包目录放在仓库外**（`D:\pm-build\<name>`），产物放 `D:\pm-packages\`——
+仓库里只留手写的 manifest，不留权重和几百 MB 的 runtime 副本：
+
 ```bash
 cd tools
-python pack_model.py init  ../examples/my-model --kind llm --runtime llama-cpu-mtp --name "我的模型"
-cp /d/gemma-4-E4B-Q8_0.gguf ../examples/my-model/weights/
-python pack_model.py scan  ../examples/my-model      # 自动补 weights 列表（按文件名猜 role）
-python pack_model.py check ../examples/my-model      # 校验：字段/文件/大小/runtime 入口
-python pack_model.py pack  ../examples/my-model -o dist/my-model.pm
+python pack_model.py init  D:/pm-build/my-model --kind llm --runtime llama-cpu-mtp --name "我的模型"
+cp /d/gemma-4-E4B-Q8_0.gguf D:/pm-build/my-model/weights/
+python pack_model.py scan  D:/pm-build/my-model      # 自动补 weights 列表（按文件名猜 role）
+python pack_model.py check D:/pm-build/my-model      # 校验：字段/文件/大小/runtime 入口
+python pack_model.py pack  D:/pm-build/my-model -o D:/pm-packages/my-model.pm
 ```
 
 把 `.pm` 传到手机，在 App 的「模型」页点「导入」即可。
