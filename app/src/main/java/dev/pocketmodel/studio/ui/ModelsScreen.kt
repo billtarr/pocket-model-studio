@@ -74,7 +74,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @Composable
-fun ModelsScreen() {
+fun ModelsScreen(onDeployed: () -> Unit = {}) {
     val ctx = LocalContext.current
     val scope = rememberCoroutineScope()
     var models by remember { mutableStateOf<List<InstalledModel>>(emptyList()) }
@@ -166,7 +166,7 @@ fun ModelsScreen() {
                     CircularProgressIndicator()
                 }
             } else if (models.isEmpty()) {
-                EmptyHint("还没有模型。\n点右下角「导入」，选择 .mlm / .zip 模型包。\n\n大包（5 GB 以上）导入要一到三分钟，进度显示在页面顶部。")
+                EmptyHint("还没有模型。\n点右下角「导入」，选择 .pm / .zip 模型包。\n\n大包（5 GB 以上）导入要一到三分钟，进度显示在页面顶部。")
             } else {
                 LazyColumn(
                     contentPadding = PaddingValues(12.dp),
@@ -176,12 +176,14 @@ fun ModelsScreen() {
                         ModelCard(
                             m = m,
                             onDeploy = {
-                                // 只创建实例，UI 变化在「服务」页；不给反馈的话会被当成按钮坏了
+                                // 只创建实例，启动开关在「服务」页；建完直接把用户带过去，
+                                // 否则点完没有任何可见变化（Toast 一闪），像是按钮没反应。
                                 StudioCore.instanceFor(m.manifest, m.dir)
                                 android.widget.Toast.makeText(
-                                    ctx, "已加入「服务」页，去那里打开开关启动",
-                                    android.widget.Toast.LENGTH_LONG
+                                    ctx, "已加入「服务」页，打开开关启动",
+                                    android.widget.Toast.LENGTH_SHORT
                                 ).show()
+                                onDeployed()
                             },
                             onDelete = { pendingDelete = m },
                         )

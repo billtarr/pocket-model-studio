@@ -132,7 +132,9 @@ fun StudioApp() {
         Box(Modifier.padding(pad).fillMaxSize()) {
             when (tab) {
                 0 -> ServicesScreen(onOpenWebUi = openWebUi)
-                1 -> ModelsScreen()
+                // 部署完直接落到「服务」页：实例是在那边起的，留在模型页只能看见一句
+                // Toast，用户得自己切过去才发现「多了张卡」，这一步没有信息量。
+                1 -> ModelsScreen(onDeployed = { tab = 0 })
                 else -> SettingsScreen()
             }
         }

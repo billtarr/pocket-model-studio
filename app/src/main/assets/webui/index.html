@@ -118,7 +118,9 @@
   body.mode-image #img { display: flex; }
   body.mode-image #chat, body.mode-image footer, body.mode-image #params { display: none; }
   .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 12px; }
-  .row { display: flex; gap: 8px; align-items: center; }
+  /* 允许换行：412 CSS px 的屏（手机 WebView）放不下「尺寸/输入框/步数/胶囊/生成」一整行，
+     不换行时「生成」按钮会被挤到屏幕外，看着像没这个按钮 */
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; row-gap: 8px; }
   .label { font-size: 12px; color: var(--muted); flex: none; }
   select, input[type=number] {
     background: var(--bg); color: var(--text); border: 1px solid var(--line);
@@ -135,8 +137,25 @@
   .bar { height: 7px; border-radius: 4px; background: var(--bubble); overflow: hidden; }
   .bar > i { display: block; height: 100%; width: 0%; background: var(--accent); transition: width .3s; }
   .status { font-size: 12px; color: var(--muted); margin-top: 7px; font-variant-numeric: tabular-nums; }
-  #out { width: 100%; border-radius: 12px; display: none; margin-top: 2px; }
+  /* 生成结果按原始像素显示：#img 是 flex column，默认 align-items:stretch 会把 img
+     拉到整屏宽（320² 的图被放大成一块马赛克）。这里显式居中 + max-width 兜底，
+     小图保持原尺寸，大图（512² 以上）才缩到容器宽度。 */
+  #out {
+    max-width: 100%; width: auto; height: auto; align-self: center;
+    border-radius: 12px; display: none; margin-top: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12);
+  }
   #out.show { display: block; }
+  #outBar { display: none; }
+  #outBar.show { display: flex; }
+  #toast {
+    position: fixed; left: 50%; bottom: calc(26px + env(safe-area-inset-bottom));
+    transform: translateX(-50%) translateY(10px); opacity: 0; pointer-events: none;
+    background: rgba(20,20,19,.92); color: #fff; font-size: 13px; line-height: 1.5;
+    padding: 9px 15px; border-radius: 10px; max-width: 84vw; text-align: center;
+    transition: opacity .18s, transform .18s; z-index: 20;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .hint { font-size: 12px; color: var(--muted); line-height: 1.7; }
 </style>
 </head>
@@ -196,8 +215,6 @@
            改了只会画出糊图或半成品，所以这里不给改，只做只读展示。 -->
       <span class="label" style="margin-left:6px">步数</span>
       <span class="pill" id="stepsPill">8 · 锁定</span>
-      <span class="spacer"></span>
-      <button class="send" id="genBtn">生成</button>
     </div>
     <div class="row" style="margin-top:8px">
       <span class="label">种子</span>
@@ -205,7 +222,9 @@
              style="width:132px" autocomplete="off" inputmode="numeric">
       <button class="ghost" id="seedDice" title="换一个随机种子">随机</button>
       <span class="spacer"></span>
-      <span class="label" id="seedUsed"></span>
+      <!-- 生成按钮放在第二行最右：第一行（尺寸/步数）在 360 CSS px 的手机上放不下它，
+           留在那里会被挤到下一行的最左边，看着像个孤立的小方块 -->
+      <button class="send" id="genBtn">生成</button>
     </div>
     <div style="margin-top:10px">
       <div class="bar"><i id="genBar"></i></div>
@@ -213,15 +232,24 @@
     </div>
   </div>
   <img id="out" alt="生成结果">
+  <div class="row" id="outBar">
+    <span class="pill" id="outPix"></span>
+    <span class="spacer"></span>
+    <button class="ghost" id="saveBtn">保存到相册</button>
+  </div>
   <div class="hint">
     <b>步数固定 8</b>（Turbo 是 8 步蒸馏模型，步数与 sigmas、权重配套训练，改了只会出糊图）。<br>
     320² 约 40 秒，512² 约 1 分钟。DiT 与 VAE 解码都在 NPU（Hexagon HTP）上跑，
     <b>只有文本编码在 CPU</b>。生成期间请保持本页在前台。<br>
+    <b>出图按原始像素显示</b>，长按图片或点「保存到相册」即可存到
+    <span style="font-family:var(--mono)">Pictures/PocketModelStudio</span>。<br>
     尺寸可填 64~1024（必须是 16 的倍数）。种子填 <b>-1</b> 每次随机、点「随机」抽一个，
     填定值则复现同一张图；随机时实际用的种子会回填到输入框。<br>
     cfg 固定 1.0 —— 调大会走 CFG 双分支（batch=2），当前分段链不支持。
   </div>
 </div>
+
+<div id="toast"></div>
 
 <script>
 const $ = (id) => document.getElementById(id);
@@ -567,7 +595,6 @@ $('seedDice').addEventListener('click', () => {
   // 随机一个 32 位种子填进去，想复现同一张图就用它
   const n = Math.floor(Math.random() * 4294967296);
   $('imgSeed').value = String(n);
-  $('seedUsed').textContent = '';
 });
 
 async function generate() {
@@ -589,7 +616,6 @@ async function generate() {
     setBar(0, '种子必须是 -1（随机）或 0~4294967295 的整数（当前 ' + $('imgSeed').value + '）');
     return;
   }
-  $('seedUsed').textContent = '';
   genStart = performance.now();
   $('genBtn').disabled = true;
   $('out').classList.remove('show');
@@ -615,6 +641,7 @@ async function generate() {
     const src = imgs[0].startsWith('data:') ? imgs[0] : 'data:image/png;base64,' + imgs[0];
     $('out').src = src;
     $('out').classList.add('show');
+    $('outBar').classList.add('show');
     // 后端在 info.seed 里回报实际用的种子（传 -1 时才知道抽中了什么）。
     // 注意 sdapi 的 info 是 **JSON 字符串**（`out["info"] = jsoninfo.dump()`，A1111 的惯例），
     // 不是对象 —— 只判 object 会永远拿不到，回填就失效。
@@ -634,7 +661,6 @@ async function generate() {
     }
     const el = (performance.now() - genStart) / 1000;
     const tail = used >= 0 ? ' · seed ' + used : '';
-    $('seedUsed').textContent = used >= 0 ? '本次种子 ' + used : '';
     setBar(1, '完成 · ' + el.toFixed(1) + ' s（' + steps + ' 步 ' + size + '²' + tail + '）');
   } catch (e) {
     setBar(0, '失败：' + e.message);
@@ -645,6 +671,52 @@ async function generate() {
 }
 
 $('genBtn').addEventListener('click', generate);
+
+// ---- 保存生成图 ----
+// 三条路都收敛到 saveOut()：页面按钮、长按图片（原生侧 evaluateJavascript 调
+// window.__pmsSaveImage）、外部浏览器（没有 App 桥时退回 <a download>）。
+function toast(text) {
+  const el = $('toast');
+  if (!el) return;
+  el.textContent = text;
+  el.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+function outImage() {
+  const img = $('out');
+  if (!img || !img.classList.contains('show') || !img.src) return null;
+  return img;
+}
+
+function saveOut() {
+  const img = outImage();
+  if (!img) { toast('还没有可保存的图'); return false; }
+  if (window.pms && typeof window.pms.saveImage === 'function') {
+    let r = '';
+    try { r = String(window.pms.saveImage(img.src)); } catch (e) { r = 'err:' + e.message; }
+    if (r.indexOf('ok:') === 0) toast('已保存到相册 · ' + r.slice(3));
+    else toast('保存失败：' + (r.replace('err:', '') || '未知原因'));
+    return true;
+  }
+  // 外部浏览器：走普通下载
+  const a = document.createElement('a');
+  a.href = img.src;
+  a.download = 'pms-' + (($('imgSeed').value || 'img') + '') + '.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  toast('已开始下载');
+  return true;
+}
+
+window.__pmsSaveImage = saveOut;
+$('saveBtn').addEventListener('click', saveOut);
+$('out').addEventListener('load', () => {
+  const img = $('out');
+  $('outPix').textContent = img.naturalWidth + '×' + img.naturalHeight;
+});
 
 // ---- 键盘适配 ----
 // WebView 里弹键盘不会触发页面 resize（adjustResize 没生效），底部输入区被整块挡在后面。
