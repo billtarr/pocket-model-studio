@@ -38,11 +38,29 @@ App 只负责**导入、监管进程、转发请求**，一行模型代码都不
 | 熄屏保活（WakeLock + 电池白名单入口） | ⚠️ 部分：CPU 不休眠，但 ColorOS 仍掐网络 |
 | 多实例资源仲裁 / 模型包签名校验 | ❌ 未做 |
 
-已跑通的实测服务（模型包不在本仓库）：
+## 模型包下载
 
-- **Qwen-Image 2.1 Turbo** — 7.1B DiT 按层切 3 段常驻链，NPU 出图，`/sdapi` 接口。
-  320²/8 步约 40 s、512²/8 步约 1 分钟（8 Gen 2）。
-- **Qwen3.5-9B / gemma4-E4B** — 混推（NPU prefill + CPU decode），decode 约 11 t/s。
+打好的包发在 ModelScope，下载后直接在 App 里「导入」即可 —— **包内自带运行框架**，不用配环境：
+
+| 模型包 | 任务 | 大小 | 实测（8 Gen 2） |
+|---|---|---|---|
+| [**qwen-image-2.1-turbo-split**](https://modelscope.cn/models/billtarr/qwen-image-2.1-turbo-split) | 文生图 | 9.26 GB | 320²/8 步约 40 s、512² 约 57 s |
+| [**qwen35-9b-split**](https://modelscope.cn/models/billtarr/qwen35-9b-split) | 文本生成 | 5.32 GB | 约 5.4~5.6 tok/s（双槽流水，≤2k 上下文） |
+
+- **qwen-image-2.1-turbo-split**：7.1B DiT 按层切 3 段常驻链（0-11 / 11-22 / 22-32），
+  段间共享内存 + eventfd 传隐状态，末段即 `sd-server`，对外提供 `/sdapi` 接口。
+  文本编码器走 CPU，DiT 与 VAE 走 HTP0。
+- **qwen35-9b-split**：32 层按 `11/24` 切三段，各持一份 NPU 会话，`lm_head` 放 DSP；
+  支持 OpenAI 风格 `/v1/chat/completions` 与流式输出。
+
+⚠️ **两个包都只支持骁龙 8 Gen 2（SM8550 / Hexagon v73）**。DSP applet 绑定 hexagon 架构版本，
+8 Gen 3 及以上要另编对应 applet，本包不能直接用。
+
+使用流程：先构建并安装 APK（见下节；**预编译包暂未发布**）→「模型」页「导入」选 `.pm` →
+解压并补执行位 → 点「部署」→「服务」页开开关 → 卡片上出现 WebUI 与局域网地址。
+
+> 另有 **gemma4-E4B 混推包**（NPU prefill + CPU decode，decode 约 11 t/s，7.96 GB）
+> 在本机验证过，暂未发布。
 
 ## 构建
 
